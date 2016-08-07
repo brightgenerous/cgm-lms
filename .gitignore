@@ -1,0 +1,19 @@
+logs
+project/project
+project/target
+target
+tmp
+dist
+.cache
+
+### IntelliJ ###
+/.idea
+/.idea_modules
+
+### Eclipse ###
+/.classpath
+/.project
+/.settings
+
+### Mac OS ###
+.DS_Store
