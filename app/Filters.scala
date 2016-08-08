@@ -1,8 +1,7 @@
-import javax.inject._
+import javax.inject.{Inject, Singleton}
 
-import filters.ExampleFilter
-import play.api._
 import play.api.http.HttpFilters
+import sc.ript.cgmlms.fw.filters.FiltersProvider
 
 /**
   * This class configures filters that run on every request. This
@@ -13,18 +12,11 @@ import play.api.http.HttpFilters
   * from a different class by adding a `play.http.filters` setting to
   * the `application.conf` configuration file.
   *
-  * @param env           Basic environment settings for the current application.
-  * @param exampleFilter A demonstration filter that adds a header to
-  *                      each response.
+  * @param provider filters provider.
   */
 @Singleton
-class Filters @Inject()(env: Environment, exampleFilter: ExampleFilter) extends HttpFilters {
+class Filters @Inject() private(provider: FiltersProvider) extends HttpFilters {
 
-  override val filters = {
-    // Use the example filter if we're running development mode. If
-    // we're running in production or test mode then don't use any
-    // filters at all.
-    if (env.mode == Mode.Dev) Seq(exampleFilter) else Seq.empty
-  }
+  override lazy val filters = provider.filters
 
 }
