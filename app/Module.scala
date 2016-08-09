@@ -1,7 +1,5 @@
-import java.time.Clock
-
-import com.google.inject.AbstractModule
-import services.{ApplicationTimer, AtomicCounter, Counter}
+import com.google.inject.{Binder, Module => GModule}
+import sc.ript.cgmlms.fw.guicemodule.GuiceModuleProvider
 
 /**
   * This class is a Guice module that tells Guice how to bind several
@@ -13,16 +11,10 @@ import services.{ApplicationTimer, AtomicCounter, Counter}
   * adding `play.modules.enabled` settings to the `application.conf`
   * configuration file.
   */
-class Module extends AbstractModule {
+class Module extends GModule {
 
-  override def configure() = {
-    // Use the system clock as the default implementation of Clock
-    bind(classOf[Clock]).toInstance(Clock.systemDefaultZone)
-    // Ask Guice to create an instance of ApplicationTimer when the
-    // application starts.
-    bind(classOf[ApplicationTimer]).asEagerSingleton()
-    // Set AtomicCounter as the implementation for Counter.
-    bind(classOf[Counter]).to(classOf[AtomicCounter])
-  }
+  private lazy val module = GuiceModuleProvider.module
+
+  override def configure(binder: Binder) = module.configure(binder)
 
 }
