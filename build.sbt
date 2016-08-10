@@ -14,8 +14,18 @@ libraryDependencies ++= Seq(
 )
 
 libraryDependencies ++= Seq(
-  "com.typesafe.scala-logging" %% "scala-logging" % "3.4.0",
-  "org.flywaydb" %% "flyway-play" % "3.0.1"
+  "com.typesafe.scala-logging" %% "scala-logging" % "3.4.0"
 )
 
 resolvers += "scalaz-bintray" at "http://dl.bintray.com/scalaz/releases"
+
+////////////////////////
+// flyway
+///////////////////////
+flywayLocations := Seq("filesystem:conf/db/migration/default/common", "filesystem:conf/db/migration/default/h2")
+
+flywayUrl := "jdbc:h2:file:./target/db/example"
+
+flywayUser := "sa"
+
+flywayPassword := ""
