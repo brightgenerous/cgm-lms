@@ -5,8 +5,8 @@ name := """cgm-lms"""
 version := "1.0-SNAPSHOT"
 
 lazy val root = (project in file("."))
-  .aggregate(cgmlmsInfrastructure, cgmlmsCommon)
-  .dependsOn(cgmlmsInfrastructure, cgmlmsCommon)
+  .aggregate(cgmlmsCommon, cgmlmsInfrastructure, cgmlmsDomain)
+  .dependsOn(cgmlmsCommon, cgmlmsInfrastructure, cgmlmsDomain)
   .enablePlugins(PlayScala)
 
 scalaVersion := "2.11.8"
@@ -69,12 +69,6 @@ lazy val cgmlmsCommon = (project in file("modules/cgmlms-common"))
   .settings(commonSettings: _*)
   .settings(cgmlmsCommonSettings: _*)
   .enablePlugins(PlayScala)
-lazy val cgmlmsDomain = (project in file("modules/cgmlms-domain"))
-  .settings(commonSettings: _*)
-  .settings(cgmlmsDomainSettings: _*)
-  .aggregate(cgmlmsInfrastructure, cgmlmsCommon)
-  .dependsOn(cgmlmsInfrastructure, cgmlmsCommon)
-  .enablePlugins(PlayScala)
 lazy val cgmlmsInfrastructure = (project in file("modules/cgmlms-infrastructure"))
   .settings(commonSettings: _*)
   .settings(cgmlmsInfrastructureSettings: _*)
@@ -87,6 +81,12 @@ lazy val cgmlmsInfrastructure = (project in file("modules/cgmlms-infrastructure"
   ))
   .aggregate(cgmlmsCommon)
   .dependsOn(cgmlmsCommon)
+  .enablePlugins(PlayScala)
+lazy val cgmlmsDomain = (project in file("modules/cgmlms-domain"))
+  .settings(commonSettings: _*)
+  .settings(cgmlmsDomainSettings: _*)
+  .aggregate(cgmlmsCommon, cgmlmsInfrastructure)
+  .dependsOn(cgmlmsCommon, cgmlmsInfrastructure)
   .enablePlugins(PlayScala)
 
 assemblyMergeStrategy in assembly := {
