@@ -1,4 +1,5 @@
 import play.sbt.PlayImport.PlayKeys
+import sbt.Test
 import sbt.Keys._
 import sbt.{Attributed, Build}
 import sbtassembly.AssemblyKeys.assembly
@@ -25,7 +26,8 @@ object BasicSettings extends Build {
     name := "cgmlms-infrastructure",
     fullClasspath in assembly += Attributed.blank(PlayKeys.playPackageAssets.value),
     version := "1.0-SNAPSHOT",
-    scalaVersion := defaultScalaVersion
+    scalaVersion := defaultScalaVersion,
+    javaOptions in Test ++= Seq("-Dconfig.file=../../conf/application.conf")
   )
 
   lazy val cgmlmsDomainSettings = Seq(
