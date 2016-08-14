@@ -5,7 +5,7 @@ name := """cgm-lms"""
 version := "1.0-SNAPSHOT"
 
 lazy val root = (project in file("."))
-  .aggregate(cgmlmsCommon, cgmlmsInfrastructure, cgmlmsDomain)
+  .settings(commonSettings: _*)
   .dependsOn(cgmlmsCommon, cgmlmsInfrastructure, cgmlmsDomain)
   .enablePlugins(PlayScala)
 
@@ -72,13 +72,6 @@ lazy val cgmlmsCommon = (project in file("modules/cgmlms-common"))
 lazy val cgmlmsInfrastructure = (project in file("modules/cgmlms-infrastructure"))
   .settings(commonSettings: _*)
   .settings(cgmlmsInfrastructureSettings: _*)
-  .settings(libraryDependencies ++= Seq(
-    "com.typesafe.slick" %% "slick" % "3.1.1",
-    "com.typesafe.slick" %% "slick-hikaricp" % "3.1.1",
-    "com.typesafe.slick" %% "slick-codegen" % "3.1.1",
-    "org.scalatest" % "scalatest_2.11" % "3.0.0" % Test,
-    "com.h2database" % "h2" % "1.4.192" % Test
-  ))
   .aggregate(cgmlmsCommon)
   .dependsOn(cgmlmsCommon)
   .enablePlugins(PlayScala)
@@ -88,16 +81,3 @@ lazy val cgmlmsDomain = (project in file("modules/cgmlms-domain"))
   .aggregate(cgmlmsCommon, cgmlmsInfrastructure)
   .dependsOn(cgmlmsCommon, cgmlmsInfrastructure)
   .enablePlugins(PlayScala)
-
-assemblyMergeStrategy in assembly := {
-  case PathList("javax", "servlet", xs@_*) => MergeStrategy.first
-  case PathList(ps@_*) if ps.last endsWith ".properties" => MergeStrategy.first
-  case PathList(ps@_*) if ps.last endsWith ".xml" => MergeStrategy.first
-  case PathList(ps@_*) if ps.last endsWith ".types" => MergeStrategy.first
-  case PathList(ps@_*) if ps.last endsWith ".class" => MergeStrategy.first
-  case "application.conf" => MergeStrategy.concat
-  case "unwanted.txt" => MergeStrategy.discard
-  case x =>
-    val oldStrategy = (assemblyMergeStrategy in assembly).value
-    oldStrategy(x)
-}
