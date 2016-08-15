@@ -22,3 +22,7 @@ addSbtPlugin("org.irundaia.sbt" % "sbt-sassify" % "1.4.6")
 addSbtPlugin("org.flywaydb" % "flyway-sbt" % "4.0.3")
 
 resolvers += "Flyway" at "https://flywaydb.org/repo"
+
+// sbt assembly
+
+addSbtPlugin("com.eed3si9n" % "sbt-assembly" % "0.14.3")

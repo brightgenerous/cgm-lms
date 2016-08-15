@@ -4,7 +4,10 @@ name := """cgm-lms"""
 
 version := "1.0-SNAPSHOT"
 
-lazy val root = (project in file(".")).enablePlugins(PlayScala)
+lazy val root = (project in file("."))
+  .settings(commonSettings: _*)
+  .dependsOn(cgmlmsCommon, cgmlmsInfrastructure, cgmlmsDomain)
+  .enablePlugins(PlayScala)
 
 scalaVersion := "2.11.8"
 
@@ -16,10 +19,7 @@ libraryDependencies ++= Seq(
 )
 
 libraryDependencies ++= Seq(
-  "com.typesafe.scala-logging" %% "scala-logging" % "3.4.0",
-  "com.typesafe.slick" %% "slick" % "3.1.1",
-  "com.typesafe.slick" %% "slick-hikaricp" % "3.1.1",
-  "com.typesafe.slick" %% "slick-codegen" % "3.1.1"
+  "com.typesafe.scala-logging" %% "scala-logging" % "3.4.0"
 )
 
 resolvers += "scalaz-bintray" at "http://dl.bintray.com/scalaz/releases"
@@ -46,7 +46,7 @@ lazy val slickCodeGenTask = (sourceManaged, dependencyClasspath in Compile, runn
   val slickDriver = config.getString("slick.dbs.default.driver").init
   val jdbcDriver = config.getString("slick.dbs.default.db.driver")
   val url = config.getString("slick.dbs.default.db.url")
-  val outputDir = "app/"
+  val outputDir = "modules/cgmlms-infrastructure/app"
   val pkg = "sc.ript.cgmlms.infra.database"
   val username = config.getString("slick.dbs.default.db.user")
   val password = config.getString("slick.dbs.default.db.password")
@@ -61,3 +61,23 @@ lazy val slickCodeGenTask = (sourceManaged, dependencyClasspath in Compile, runn
   val fname = outputDir + "/Tables.scala"
   Seq(file(fname))
 }
+
+////////////////////////
+// Library
+///////////////////////
+lazy val cgmlmsCommon = (project in file("modules/cgmlms-common"))
+  .settings(commonSettings: _*)
+  .settings(cgmlmsCommonSettings: _*)
+  .enablePlugins(PlayScala)
+lazy val cgmlmsInfrastructure = (project in file("modules/cgmlms-infrastructure"))
+  .settings(commonSettings: _*)
+  .settings(cgmlmsInfrastructureSettings: _*)
+  .aggregate(cgmlmsCommon)
+  .dependsOn(cgmlmsCommon)
+  .enablePlugins(PlayScala)
+lazy val cgmlmsDomain = (project in file("modules/cgmlms-domain"))
+  .settings(commonSettings: _*)
+  .settings(cgmlmsDomainSettings: _*)
+  .aggregate(cgmlmsCommon, cgmlmsInfrastructure)
+  .dependsOn(cgmlmsCommon, cgmlmsInfrastructure)
+  .enablePlugins(PlayScala)
