@@ -5,6 +5,7 @@ target
 tmp
 dist
 .cache
+lib_managed
 
 ### IntelliJ ###
 /.idea
